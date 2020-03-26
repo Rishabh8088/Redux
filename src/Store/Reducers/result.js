@@ -1,30 +1,28 @@
-import * as actionTypes from "../action";
+import * as actionTypes from "../Actions/actionType";
+import { updateObject } from "../utility";
 
 const intialState = {
   results: []
 };
 
+const deleteResult = (state, action) => {
+  const updateArray = state.results.filter(
+    result => result.id !== action.resultElementId
+  );
+
+  return updateObject(state, { results: updateArray });
+};
+
 const result = (state = intialState, action) => {
   switch (action.type) {
     case actionTypes.STORE_RESULT:
-      return {
-        ...state,
+      // Using utility method
+      return updateObject(state, {
         results: state.results.concat({ id: new Date(), value: action.result })
-      };
+      });
+
     case actionTypes.DELETE_RESULT:
-      // const id = 2;
-      // const newArray = [...state.results];
-      // newArray.splice(id, 1);
-
-      const updateArray = state.results.filter(
-        result => result.id !== action.resultElementId
-      );
-
-      return {
-        ...state,
-        results: updateArray
-        // results: newArray
-      };
+      return deleteResult(state, action);
   }
   return state;
 };
